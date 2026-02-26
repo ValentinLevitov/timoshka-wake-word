@@ -1,0 +1,65 @@
+# openWakeWord training config for "Тимошка" wake word
+# Used by: python openwakeword/openwakeword/train.py --training_config timoshka_config.yaml
+
+model_name: "timoshka"
+
+target_phrase:
+  - "тимошка"
+
+# Adversarial negatives: phonetically similar Russian words
+# These are generated separately via piper-sample-generator + voice conversion,
+# NOT by the built-in English TTS pipeline
+custom_negative_phrases: []
+
+# TTS generation — disabled, we generate samples externally with Piper Russian voices
+# Set to 0 because we supply pre-generated clips
+n_samples: 0
+n_samples_val: 0
+
+# Augmentation
+augmentation_rounds: 1
+augmentation_batch_size: 16
+
+# Paths (relative to working directory in Colab)
+piper_sample_generator_path: "./piper-sample-generator"
+output_dir: "./timoshka_output"
+
+# Room impulse responses for reverb augmentation
+# Download MIT RIRs: https://mcdermottlab.mit.edu/Reverb/IR_Survey.html
+rir_paths:
+  - "./mit_rirs"
+
+# Background noise for augmentation
+# audioset_16k: subset of AudioSet at 16kHz
+# fma: Free Music Archive samples
+background_paths:
+  - "./audioset_16k"
+  - "./fma"
+
+background_paths_duplication_rate:
+  - 1
+
+# Pre-computed negative features from ACAV100M (~2000 hrs, ~6GB)
+# Download: https://huggingface.co/datasets/davidscripka/openwakeword_features
+feature_data_files:
+  "ACAV100M_sample": "./openwakeword_features_ACAV100M_2000_hrs_16bit.npy"
+
+# Validation set for false-positive rate estimation (~11 hrs)
+false_positive_validation_data_path: "./validation_set_features.npy"
+
+# Batch composition per class during training
+batch_n_per_class:
+  "ACAV100M_sample": 1024
+  "adversarial_negative": 50
+  "positive": 50
+
+# Model architecture
+model_type: "dnn"
+layer_size: 32
+
+# Training parameters
+steps: 50000
+max_negative_weight: 1500
+target_false_positives_per_hour: 0.2
+target_accuracy: 0.7
+target_recall: 0.5
