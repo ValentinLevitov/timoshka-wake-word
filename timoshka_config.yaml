@@ -7,11 +7,11 @@ target_phrase:
   - "тимошка"
 
 # Adversarial negatives: phonetically similar Russian words
-# These are generated separately via piper-sample-generator + voice conversion,
+# Generated separately via piper-sample-generator + voice conversion,
 # NOT by the built-in English TTS pipeline
 custom_negative_phrases: []
 
-# TTS generation — disabled, we generate samples externally with Piper Russian voices
+# TTS generation disabled — we generate samples externally with Piper Russian voices
 # Set to 0 because we supply pre-generated clips
 n_samples: 0
 n_samples_val: 0
